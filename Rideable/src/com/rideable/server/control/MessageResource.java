@@ -1,0 +1,99 @@
+package com.rideable.server.control;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Set;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rideable.database.models.Ad;
+import com.rideable.database.models.User;
+import com.rideable.database.persistence.AdManager;
+import com.rideable.database.persistence.UserManager;
+import com.rideable.server.models.Message;
+
+@Path("/message")
+public class MessageResource {
+
+	private UserManager userManager;
+	private Set<User> ridePassengers;
+
+	private final static String AD_ID = "adId";
+	private final static String EMAIL = "email";
+	private final static String MESSAGE = "message";
+	private final static String API_KEY = "AIzaSyC0Q70Z5h8lv_MPLJVXS4SsHO4Xpv12nvE";
+
+	public MessageResource() {
+		userManager = UserManager.getDefault();
+
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
+	public void sendMessage(MultivaluedMap<String, String> messageParams) {
+
+		String adId = messageParams.getFirst(AD_ID);
+		String email = messageParams.getFirst(EMAIL);
+		String message = messageParams.getFirst(MESSAGE);
+
+		Ad ad = AdManager.getDefault().getAdWithId(Integer.parseInt(adId));
+		System.out.println("Sending message: " + message);
+		System.out.println("User Email: " + email);
+		
+		ridePassengers = ad.getRidePassengers();
+		ridePassengers.add(ad.getaUser());
+		ridePassengers.remove(UserManager.getDefault().getUser(email));
+		
+		Message userMessage = new Message();
+		userMessage.createData(UserManager.getDefault().getUser(email).getFirstName(), message, adId);
+		for (User user : ridePassengers) {
+			userMessage.addRegId(user.getRegId());
+			System.out.println(user.getRegId());
+		}
+
+		try {
+
+			URL url = new URL("https://android.googleapis.com/gcm/send");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setRequestProperty("Authorization", "key=" + API_KEY);
+			conn.setDoOutput(true);
+			ObjectMapper mapper = new ObjectMapper();
+			DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+			mapper.writeValue(wr, userMessage);
+			wr.flush();
+			wr.close();
+			int responseCode = conn.getResponseCode();
+			System.out.println("\nSending 'POST' request to URL : " + url);
+			System.out.println("Response Code : " + responseCode);
+			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			System.out.println(response.toString());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		
+	}
+
+}

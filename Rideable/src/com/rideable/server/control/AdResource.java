@@ -1,0 +1,142 @@
+package com.rideable.server.control;
+
+import java.util.List;
+import java.util.Set;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.UriInfo;
+
+import com.rideable.database.models.Ad;
+import com.rideable.database.models.User;
+import com.rideable.database.persistence.AdManager;
+import com.rideable.database.persistence.UserManager;
+
+
+@Path("/ad")
+public class AdResource {
+	
+	private final static String D_LONG = "departureLongitude";
+	private final static String D_LAT = "departureLatitude";
+	private final static String A_LONG = "arrivalLongitude";
+	private final static String A_LAT = "arrivalLatitude";
+	private final static String PASSENGERS = "passengers";
+	private final static String D_DATE = "departureDate";
+	private final static String D_CITY = "departureCity";
+	private final static String A_CITY = "arrivalCity";
+	private final static String USER_EMAIL = "userEmail";
+	private final static String PRICE = "price";
+	private final static String RIDE_PASSENGERS = "ridePassengers";
+	
+	private Ad ad;
+	private User aUser;
+	private AdManager adManager;
+	private UserManager userManager;
+
+	@Context 
+	UriInfo uriInfo;
+	
+	@Context
+	Request resquest;
+	
+	
+	public AdResource() {
+		adManager = AdManager.getDefault();
+		userManager = UserManager.getDefault();
+		
+	}
+	
+	@GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String respondAsReady() {
+        return "Rideable Ad";
+    }	
+	
+	@GET
+	@Path("{dCity}/{aCity}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Ad> getAdsWithDepartureCity(@PathParam("dCity") String dCity, @PathParam("aCity") String aCity){
+		
+		System.out.println("Getting all ads leaving from: " + dCity + " and arriving in: " + aCity);
+		List<Ad> ads = (List<Ad>)adManager.findAdsByDCityAndACity(dCity, aCity);
+						
+		return ads;
+	}
+	
+	@GET
+	@Path("passenger/get/{email}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Ad> getAdWithPassenger(@PathParam("email") String email){
+		
+		List<Ad> ads = adManager.getAdsWithPassenger(email);
+		ads.addAll(userManager.getUser(email).getAds());
+		return ads;
+		
+	}
+	
+	
+	
+	
+	/*
+	@GET
+	@Path("{aCity}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Ad> getAdsWithArrivalCity(@PathParam("aCity") String aCity){
+		
+		System.out.println("Getting all ads leaving from: " + aCity);
+		List<Ad> ads = adManager.findAdsByArrivalCity(aCity);
+		return ads;
+	}*/
+
+	@POST
+	@Path("passenger/{adID}/{email}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Ad addPassenger(@PathParam("adID") String adID, @PathParam("email") String email){
+		
+		System.out.println(adID);
+		Ad ad = adManager.getAdWithId(Integer.parseInt(adID));
+		System.out.println(ad.getArrivalCity());
+		User addUser = userManager.getUser(email);
+		System.out.println(addUser.getFirstName());
+		
+		ad.addRidePassenger(addUser);
+		ad.setPassengers(ad.getPassengers() - 1);
+		adManager.updateAd(ad);
+		return ad;
+
+	}
+	
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+	public Ad postAd(MultivaluedMap<String, String> adParams){
+		
+		double departureLongitude = Double.parseDouble(adParams.getFirst(D_LONG));
+		double departureLatitude = Double.parseDouble(adParams.getFirst(D_LAT));
+		double arrivalLongitude = Double.parseDouble(adParams.getFirst(A_LONG));
+		double arrivalLatitude = Double.parseDouble(adParams.getFirst(A_LAT));
+		double price = Double.parseDouble(adParams.getFirst(PRICE));
+		int passengers = Integer.parseInt(adParams.getFirst(PASSENGERS));
+		String departureDate = adParams.getFirst(D_DATE);
+		String departureCity = adParams.getFirst(D_CITY);
+		String arrivalCity = adParams.getFirst(A_CITY);
+		String userEmail = adParams.getFirst(USER_EMAIL);
+			
+		aUser = userManager.getUser(userEmail);
+						
+		Ad ad = new Ad(departureLongitude, departureLatitude, arrivalLongitude, arrivalLatitude, departureCity, arrivalCity, price, passengers, departureDate);
+		aUser.addAd(ad);
+		userManager.updateUser(aUser);
+		
+		return ad;
+	}
+}

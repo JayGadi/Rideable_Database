@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.rideable.database.persistence">
+
+    <class name="com.rideable.database.models.UserProfile" table="USER_PROFILE">
+    
+       <meta attribute="class-description">
+         This class contains the user profile details. 
+      </meta>
+      <id name="id" type="integer" column="id">
+         <generator class="increment"/>
+      </id>
+      <property name="rating"><column name="rating" sql-type="int"/></property>
+      <many-to-one name="user" column="user" unique="true" 
+       class="com.rideable.database.models.User" not-null="true"/>
+    </class>
+
+</hibernate-mapping>

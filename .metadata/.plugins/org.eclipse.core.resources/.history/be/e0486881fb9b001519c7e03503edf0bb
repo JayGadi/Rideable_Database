@@ -1,0 +1,93 @@
+package com.rideable.server.control;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.UriInfo;
+
+import com.rideable.database.models.User;
+import com.rideable.database.persistence.AdManager;
+import com.rideable.database.persistence.UserManager;
+
+@Path("/user")
+public class UserResource {
+
+	private final static String FIRST_NAME = "firstName";
+	private final static String LAST_NAME = "lastName";
+	private final static String EMAIL = "userEmail";
+	private final static String PASSWORD = "userPassword";
+	private final static String REGID = "regId";
+	
+	private User aUser;
+	private UserManager userManager;
+	private AdManager adManager;
+	
+	@Context 
+	UriInfo uriInfo;
+	
+	@Context
+	Request resquest;
+	
+	public UserResource() {
+		userManager = UserManager.getDefault();
+		adManager = AdManager.getDefault();
+		
+		userManager.executeCreateTable();
+		adManager.executeCreateTable();
+		adManager.executeCreateJoinTable();
+		
+	}
+	
+	@GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String respondAsReady() {
+        return "Rideable";
+    }
+	
+	@GET
+	@Path("{userEmail}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public User getUser(@PathParam("userEmail") String email){
+				
+		System.out.println("Getting User with email: " + email);
+		User aUser = userManager.getUser(email);
+		if(aUser == null){
+			aUser = new User("","","","");
+		}
+		return aUser;
+		
+		
+	}
+	
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public User postUser(MultivaluedMap<String, String> personParams) {
+         
+        String firstName = personParams.getFirst(FIRST_NAME);
+        String lastName = personParams.getFirst(LAST_NAME);
+        String email = personParams.getFirst(EMAIL);
+        String password = personParams.getFirst(PASSWORD);
+        String regId = personParams.getFirst(REGID);
+        System.out.println("Reg ID: " + regId);
+         
+        System.out.println("Storing posted " + firstName + " " + lastName + "  " + email + " " + password);
+         
+        aUser = new User(firstName, lastName, email, password);
+        aUser.setRegId(regId);
+        userManager.addUser(aUser);         
+        System.out.println("person info: " + aUser.getFirstName() + " " + aUser.getLastName() + " " + aUser.getUserEmail() + " " + aUser.getUserPassword());
+         
+        return aUser;
+                         
+    }
+ 	
+
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.rideable.database.persistence">
+
+    <class name="com.rideable.database.models.Ad" lazy = "false" table="AD">
+    
+       <meta attribute="class-description">
+         This class contains the ad details. 
+      </meta>
+      <id name="id" column="id" type="integer" >
+         <generator class="increment"/>
+      </id>
+      <property name="departureLongitude"><column name="D_LONG" sql-type="double"/></property>
+      <property name="departureLatitude"><column name="D_LAT" sql-type="double"/></property>
+      <property name="arrivalLongitude"><column name ="A_LONG" sql-type="double"/></property>
+      <property name="arrivalLatitude"><column name="A_LAT" sql-type="double"/></property>
+      <property name="departureCity"><column name="D_CITY" sql-type="varchar(100)"/></property>
+      <property name="arrivalCity"><column name="A_CITY" sql-type="varchar(100)"/></property>
+      <property name="price"><column name="PRICE" sql-type="double"/></property>
+      <property name="passengers"><column name="PASSENGERS" sql-type="integer"/></property>
+      <property name="departureDate"><column name="D_DATE" sql-type="varchar(100)"/></property>
+      <many-to-one name="aUser" class="com.rideable.database.models.User" fetch="select" insert="false" update="false">
+      	<column name="USER_ID" />
+      </many-to-one>
+      
+      <set name="ridePassengers" table="AD_PASSENGERS" lazy="false" cascade="all">
+     	<key column="AD_ID"/>
+     	<many-to-many column="PASSENGER_ID" class="com.rideable.database.models.User"/> 
+      </set>
+     </class>
+
+</hibernate-mapping>

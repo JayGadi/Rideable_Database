@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.rideable.database.persistence">
+
+    <class name="com.rideable.database.models.User" lazy="false" table="USER">
+    
+       <meta attribute="class-description">
+         This class contains the user details. 
+      </meta>
+      <id name="id" column="id" type="integer" >
+         <generator class="increment"/>
+      </id>
+      <property name="firstName"><column name="first_name" sql-type="varchar(100)"/></property>
+      <property name="lastName"><column name="last_name" sql-type="varchar(100)"/></property>
+      <property name="userEmail"><column name ="email_address" sql-type="varchar(100)"/></property>
+      <property name="userPassword"><column name="password" sql-type="varchar(100)"/></property>
+      <property name="regId"><column name="REG_ID" sql-type="text"/></property>
+      
+      <bag name="ads" table="AD" lazy="false" cascade="all">
+      	<key column="USER_ID"/>
+      	<one-to-many class="com.rideable.database.models.Ad"/>
+      </bag>
+     </class>
+
+</hibernate-mapping>

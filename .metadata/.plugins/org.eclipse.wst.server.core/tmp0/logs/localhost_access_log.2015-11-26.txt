@@ -1,0 +1,16 @@
+127.0.0.1 - - [26/Nov/2015:00:05:57 -0500] "GET / HTTP/1.1" 404 994
+127.0.0.1 - - [26/Nov/2015:00:11:33 -0500] "POST /Rideable/ride/user HTTP/1.1" 200 111
+127.0.0.1 - - [26/Nov/2015:00:11:33 -0500] "GET /Rideable/ride/user/matt.j.mills92@gmail.com HTTP/1.1" 200 70
+127.0.0.1 - - [26/Nov/2015:00:12:26 -0500] "GET /Rideable/ride/user/matt.j.mill92@gmail.com HTTP/1.1" 200 70
+127.0.0.1 - - [26/Nov/2015:00:13:14 -0500] "GET /Rideable/ride/user/matt.j.mill92@gmail.com HTTP/1.1" 200 70
+127.0.0.1 - - [26/Nov/2015:00:13:15 -0500] "POST /Rideable/ride/user HTTP/1.1" 200 111
+127.0.0.1 - - [26/Nov/2015:00:13:19 -0500] "GET /Rideable/ride/user/matt.j.mill92@gmail.com HTTP/1.1" 200 111
+127.0.0.1 - - [26/Nov/2015:00:43:07 -0500] "GET /Rideable/ride/user/a.a@a.com HTTP/1.1" 200 89
+127.0.0.1 - - [26/Nov/2015:00:49:40 -0500] "GET /Rideable/ride/user/a.a@a.com HTTP/1.1" 200 89
+127.0.0.1 - - [26/Nov/2015:01:24:44 -0500] "GET /Rideable/ride/user/a.a@a.com HTTP/1.1" 200 89
+127.0.0.1 - - [26/Nov/2015:02:33:56 -0500] "GET /Rideable/ride/user/a.a@a.com HTTP/1.1" 200 89
+127.0.0.1 - - [26/Nov/2015:02:43:20 -0500] "GET /Rideable/ride/user/a.a@a.com HTTP/1.1" 200 89
+127.0.0.1 - - [26/Nov/2015:03:06:27 -0500] "GET / HTTP/1.1" 404 994
+127.0.0.1 - - [26/Nov/2015:03:08:30 -0500] "GET /Rideable/ride/user/a.a@a.com HTTP/1.1" 200 89
+127.0.0.1 - - [26/Nov/2015:03:08:56 -0500] "GET /Rideable/ride/user/a.a@a.com HTTP/1.1" 200 89
+127.0.0.1 - - [26/Nov/2015:03:13:46 -0500] "GET /Rideable/ride/user/a.a@a.com HTTP/1.1" 200 89

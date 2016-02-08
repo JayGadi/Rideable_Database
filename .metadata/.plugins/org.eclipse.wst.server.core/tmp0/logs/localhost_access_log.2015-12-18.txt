@@ -1,0 +1,14 @@
+127.0.0.1 - - [18/Dec/2015:22:39:22 -0500] "GET / HTTP/1.1" 404 994
+192.168.2.30 - - [18/Dec/2015:22:46:47 -0500] "POST /Rideable/ride/user HTTP/1.1" 200 117
+192.168.2.30 - - [18/Dec/2015:22:46:47 -0500] "GET /Rideable/ride/user/rheagadi@gmail.com HTTP/1.1" 200 81
+192.168.2.30 - - [18/Dec/2015:22:47:10 -0500] "GET /Rideable/ride/user/rheagadi@gmail.com HTTP/1.1" 200 117
+192.168.2.30 - - [18/Dec/2015:22:47:11 -0500] "POST /Rideable/ride/user/new_regid/rheagadi@gmail.com/APA91bFUWG8NUVMRzxZC_OfB1qyrmyvy0sd_DIj-t_Mkmc9fWYFAmjRM3xEsArOP-j1WyrSVrEMYOcXE-8nEVZXaTXuT-Bs5jdlAR4PDMvhwS7makn_POFI HTTP/1.1" 200 234
+192.168.2.30 - - [18/Dec/2015:22:49:07 -0500] "POST /Rideable/ride/ad HTTP/1.1" 200 260
+192.168.2.30 - - [18/Dec/2015:22:49:37 -0500] "GET /Rideable/ride/ad/Mississauga/Ottawa HTTP/1.1" 200 262
+192.168.2.30 - - [18/Dec/2015:22:50:44 -0500] "GET /Rideable/ride/user/a.a@a.com HTTP/1.1" 200 219
+192.168.2.30 - - [18/Dec/2015:22:51:03 -0500] "GET /Rideable/ride/ad/Mississauga/Ottawa HTTP/1.1" 200 262
+192.168.2.30 - - [18/Dec/2015:22:51:08 -0500] "POST /Rideable/ride/ad/passenger/3/a.a@a.com HTTP/1.1" 200 260
+192.168.2.30 - - [18/Dec/2015:22:51:29 -0500] "GET /Rideable/ride/ad/Mississauga/Ottawa HTTP/1.1" 200 262
+192.168.2.30 - - [18/Dec/2015:22:51:40 -0500] "GET /Rideable/ride/user/a.a@a.com HTTP/1.1" 200 219
+192.168.2.30 - - [18/Dec/2015:22:51:47 -0500] "GET /Rideable/ride/ad/passenger/get/a.a@a.com HTTP/1.1" 200 781
+192.168.2.30 - - [18/Dec/2015:22:52:09 -0500] "POST /Rideable/ride/message HTTP/1.1" 204 -
